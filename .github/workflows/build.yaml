@@ -10,20 +10,36 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-versions: [3.6, 3.8, 3.9]
+        #python-versions: [3.6, 3.8, 3.9]
+        node-version: [12.21]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
-      - name: Setup up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          node-version: ${{ matrix.node-version }}
+      
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - uses: RojerGS/python-black-check@master
-      - name: Running pytest
-        run: | 
-          pytest skit/test_my_awesome_module.py
+      - run: |
+          npm install
+          npm install -g @angular/cli
+      
+      - name: ng build
+      - run:    
+        ng build
+
+      - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        # aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }} # if you have/need it
+        aws-region: eu-west-1
+      env:
+        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1   # optional: defaults to us-east-1
+        
