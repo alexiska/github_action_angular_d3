@@ -29,14 +29,7 @@ jobs:
       - name: ng build
       - run: ng build
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }} # if you have/need it
-          aws-region: eu-west-1
-      
+     
   deploy:
     runs-on: ubuntu-latest
     steps:
