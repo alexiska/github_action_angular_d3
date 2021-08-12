@@ -27,8 +27,7 @@ jobs:
           npm install -g @angular/cli
       
       - name: ng build
-      - run:    
-        ng build
+      - run: ng build
 
       - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
